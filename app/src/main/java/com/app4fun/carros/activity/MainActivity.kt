@@ -1,8 +1,8 @@
 package com.app4fun.carros.activity
 
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
+import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
@@ -13,7 +13,6 @@ import com.app4fun.carros.adapter.TabsAdapter
 import com.app4fun.carros.domain.TipoCarro
 import com.app4fun.carros.extensions.setupToolbar
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.include_toolbar.*
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
@@ -30,6 +29,11 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         setUpNavDrawer()
         //Tabs
         setupViewPagerTabs()
+        //FAB
+        fab.setOnClickListener{
+            val snack = Snackbar.make(it, "Clicou no fab", Snackbar.LENGTH_LONG)
+            snack.show()
+        }
 
     }
 

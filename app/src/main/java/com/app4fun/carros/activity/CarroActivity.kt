@@ -1,14 +1,15 @@
 package com.app4fun.carros.activity
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.app4fun.carros.R
 import com.app4fun.carros.domain.Carro
 import com.app4fun.carros.extensions.loadUrl
 import com.app4fun.carros.extensions.setupToolbar
 import kotlinx.android.synthetic.main.activity_carro.*
+import kotlinx.android.synthetic.main.include_activity_carro.*
 
-class CarroActivity : AppCompatActivity() {
+
+class CarroActivity : BaseActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,10 +18,10 @@ class CarroActivity : AppCompatActivity() {
         //Lê objeto enviado por parâmetro
         val carro by lazy { intent.getParcelableExtra<Carro>("carro") }
         //Configura toolbar
-        setupToolbar(R.id.toolbar, carro.nome.toString(), true)
+        setupToolbar(R.id.toolbar, carro.nome, true)
         //Atualiza descrição do carro
         tDesc.text = carro.desc
         //Mostra a foto do carro
-        img.loadUrl(carro.urlFoto)
+        appBarImg.loadUrl(carro.urlFoto)
     }
 }
