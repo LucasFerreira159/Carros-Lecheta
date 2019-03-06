@@ -17,9 +17,13 @@ import com.app4fun.carros.domain.Carro
 import com.app4fun.carros.domain.CarroService
 import com.app4fun.carros.domain.TipoCarro
 import com.app4fun.carros.listener.ClickListener
+import com.app4fun.carros.utils.AndroidUtils
 import kotlinx.android.synthetic.main.fragment_carros.*
 import kotlinx.android.synthetic.main.include_progress.*
+import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.toast
+import org.jetbrains.anko.uiThread
 
 @Suppress("DEPRECATION")
 class CarrosFragment : BaseFragment() {
@@ -54,10 +58,10 @@ class CarrosFragment : BaseFragment() {
     private fun taskCarros() {
         //Liga a animação progressBar
         progress.visibility = View.VISIBLE
-        Thread{
+        doAsync{
             //Busca os carros
-            this.carros = CarroService.getCarros(tipo)
-            activity?.runOnUiThread {
+            carros = CarroService.getCarros(tipo)
+            uiThread {
                 // Atualiza a çosta
                 recyclerView.adapter = CarroAdapter(carros, object : ClickListener {
                     override fun onClick(view: View, pos: Int) {
@@ -67,12 +71,17 @@ class CarrosFragment : BaseFragment() {
                 })
                 progress.visibility = View.INVISIBLE
             }
-        }.start()
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        taskCarros()
+        val internetOK = AndroidUtils.isNetworkAvailable(context)
+        if(internetOK){
+            taskCarros()
+        }else{
+            activity?.toast("Não há conexão com internet")
+        }
     }
 
 

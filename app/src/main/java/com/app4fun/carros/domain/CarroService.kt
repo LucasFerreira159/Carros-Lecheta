@@ -1,7 +1,9 @@
 package com.app4fun.carros.domain
 
 import com.app4fun.carros.extensions.fromJson
+import com.app4fun.carros.extensions.toJson
 import com.app4fun.carros.utils.HttpHelper
+import okhttp3.Response
 
 object CarroService {
     private const val BASE_URL = "http://livrowebservices.com.br/rest/carros"
@@ -15,5 +17,12 @@ object CarroService {
         val carros = fromJson<List<Carro>>(json)
         return carros
     }
-
+    //Salva um carro
+    fun save(carro: Carro): Response{
+        //Faz POST do Json Carro
+        val json = HttpHelper.post(BASE_URL, carro.toJson())
+        //Lê a resposta
+        val response = fromJson<Response>(json)
+        return response
+    }
 }

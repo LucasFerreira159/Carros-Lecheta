@@ -71,6 +71,7 @@ Versao %s<br><br>
     <!-- V -->
     <string name="vazio"/>
     <string name="video">Vídeo</string>
+    <string name="action_excluir">Excluir</string>
 
 
 </resources>
