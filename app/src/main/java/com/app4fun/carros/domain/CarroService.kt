@@ -25,4 +25,11 @@ object CarroService {
         val response = fromJson<Response>(json)
         return response
     }
+    //Delata um carro
+    fun delete(carro: Carro): Response{
+        val url = "$BASE_URL/${carro.id}"
+        val json = HttpHelper.delete(url)
+        val response = fromJson<Response>(json)
+        return response
+    }
 }

@@ -5,12 +5,18 @@ import android.view.Menu
 import android.view.MenuItem
 import com.app4fun.carros.R
 import com.app4fun.carros.domain.Carro
+import com.app4fun.carros.domain.CarroService
+import com.app4fun.carros.domain.event.RefreshListEvent
 import com.app4fun.carros.extensions.loadUrl
 import com.app4fun.carros.extensions.setupToolbar
 import com.app4fun.carros.extensions.toast
 import kotlinx.android.synthetic.main.activity_carro.*
 import kotlinx.android.synthetic.main.include_activity_carro.*
+import org.greenrobot.eventbus.EventBus
+import org.jetbrains.anko.alert
+import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.uiThread
 
 
 class CarroActivity : BaseActivity() {
@@ -43,9 +49,25 @@ class CarroActivity : BaseActivity() {
                 finish()
             }
             R.id.action_excluir -> {
-                toast("deletar o carro")
+                //Mostra o aleta de confirmação
+                alert("Confirma excluir este carro?"){
+                    title = "Alert"
+                    positiveButton(R.string.sim) {taskDeletar()}
+                    negativeButton(R.string.nao) { }
+                }.show()
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+    //Deleta o carro
+    private fun taskDeletar(){
+        doAsync {
+            val response = CarroService.delete(carro)
+            uiThread {
+                //Dispara o evento para atualizar a lista de carros
+                EventBus.getDefault().post(RefreshListEvent())
+                finish()
+            }
+        }
     }
 }

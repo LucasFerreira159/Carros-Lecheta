@@ -7,10 +7,12 @@ import android.view.MenuItem
 import com.app4fun.carros.R
 import com.app4fun.carros.domain.Carro
 import com.app4fun.carros.domain.CarroService
+import com.app4fun.carros.domain.event.RefreshListEvent
 import com.app4fun.carros.extensions.setupToolbar
 import com.app4fun.carros.extensions.toast
 import kotlinx.android.synthetic.main.activity_carro_form_contents.*
 import kotlinx.android.synthetic.main.include_toolbar.*
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
@@ -47,7 +49,8 @@ class CarroFormActivity : BaseActivity() {
             //Salva o carro
             val response = CarroService.save(c)
             uiThread {
-                toast(response.message())
+                //Dispara o evento para atualizar a lista de carros
+                EventBus.getDefault().post(RefreshListEvent())
                 finish()
             }
         }

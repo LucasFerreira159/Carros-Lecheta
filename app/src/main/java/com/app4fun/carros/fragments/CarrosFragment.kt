@@ -16,10 +16,14 @@ import com.app4fun.carros.adapter.CarroAdapter
 import com.app4fun.carros.domain.Carro
 import com.app4fun.carros.domain.CarroService
 import com.app4fun.carros.domain.TipoCarro
+import com.app4fun.carros.domain.event.RefreshListEvent
 import com.app4fun.carros.listener.ClickListener
 import com.app4fun.carros.utils.AndroidUtils
 import kotlinx.android.synthetic.main.fragment_carros.*
 import kotlinx.android.synthetic.main.include_progress.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
@@ -30,6 +34,12 @@ class CarrosFragment : BaseFragment() {
 
     private var tipo = TipoCarro.Classicos
     private var carros = listOf<Carro>()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        //Registra no bus de eventos
+        EventBus.getDefault().register(this)
+    }
 
     //Cria a view da fragment
     override fun onCreateView(
@@ -84,5 +94,15 @@ class CarrosFragment : BaseFragment() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        //Cancela o registro no bus de eventos
+        EventBus.getDefault().unregister(this)
+    }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(event: RefreshListEvent){
+        //Recebeu o evento
+        taskCarros()
+    }
 }
